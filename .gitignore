@@ -1,0 +1,55 @@
+# Java build outputs and local caches
+**/target/
+**/build/
+**/out/
+**/bin/
+.gradle/
+*.class
+*.war
+*.ear
+hs_err_pid*
+
+# Keep Maven/Gradle wrappers and project-supplied JAR dependencies trackable.
+# Review binary files before committing.
+
+# Angular / Node
+node_modules/
+dist/
+.angular/
+coverage/
+.nyc_output/
+.npm/
+*.tsbuildinfo
+*.log
+
+# Local secrets (review all staged files; patterns cannot detect every secret)
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+.npmrc
+settings.local.xml
+application-local.properties
+application-local.yml
+application-local.yaml
+
+# Local editor / OS state
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/*
+!.vscode/extensions.json
+Thumbs.db
+.DS_Store
+
+# Original assignment archives remain local for inspection
+*.zip
