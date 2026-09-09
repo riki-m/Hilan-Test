@@ -1,0 +1,116 @@
+{
+  "checkedAt": "2026-09-09T16:55:23.6732434+03:00",
+  "employeeId": 4,
+  "employeeLabel": "B2 QA 20260909-165439",
+  "cases": [
+    {
+      "scenario": "excess_one_day",
+      "requestId": 10,
+      "http": 409,
+      "body": "Not enough vacation balance",
+      "databaseOnlyExpectedStatusChanged": true,
+      "getStatus": 0,
+      "passed": true
+    },
+    {
+      "scenario": "exact_balance",
+      "requestId": 11,
+      "http": 200,
+      "body": "{\"id\":11,\"employeeId\":4,\"employee\":{\"id\":4,\"name\":\"B2 QA 20260909-165439\",\"annualQuota\":20},\"type\":0,\"startDate\":\"2026-04-01\",\"endDate\":\"2026-04-02\",\"status\":1,\"days\":2}",
+      "databaseOnlyExpectedStatusChanged": true,
+      "getStatus": 1,
+      "passed": true
+    },
+    {
+      "scenario": "repeat_approval",
+      "requestId": 11,
+      "http": 409,
+      "body": "Only pending requests can be approved",
+      "databaseOnlyExpectedStatusChanged": true,
+      "getStatus": 1,
+      "passed": true
+    },
+    {
+      "scenario": "exhausted",
+      "requestId": 12,
+      "http": 409,
+      "body": "Not enough vacation balance",
+      "databaseOnlyExpectedStatusChanged": true,
+      "getStatus": 0,
+      "passed": true
+    },
+    {
+      "scenario": "rejected_status",
+      "requestId": 13,
+      "http": 409,
+      "body": "Only pending requests can be approved",
+      "databaseOnlyExpectedStatusChanged": true,
+      "getStatus": 2,
+      "passed": true
+    },
+    {
+      "scenario": "missing",
+      "requestId": 9223372036854775807,
+      "http": 404,
+      "body": "Leave request not found",
+      "databaseOnlyExpectedStatusChanged": true,
+      "getStatus": null,
+      "passed": true
+    },
+    {
+      "scenario": "negative_id",
+      "requestId": -1,
+      "http": 404,
+      "body": "Leave request not found",
+      "databaseOnlyExpectedStatusChanged": true,
+      "getStatus": null,
+      "passed": true
+    },
+    {
+      "scenario": "malformed_id",
+      "requestId": "abc",
+      "http": 400,
+      "body": "{\"timestamp\":\"2026-09-09T13:55:12.346+00:00\",\"status\":400,\"error\":\"Bad Request\",\"path\":\"/api/leave-requests/abc/approve\"}",
+      "databaseOnlyExpectedStatusChanged": true,
+      "getStatus": null,
+      "passed": true
+    },
+    {
+      "scenario": "overflow_id",
+      "requestId": "9223372036854775808",
+      "http": 400,
+      "body": "{\"timestamp\":\"2026-09-09T13:55:14.060+00:00\",\"status\":400,\"error\":\"Bad Request\",\"path\":\"/api/leave-requests/9223372036854775808/approve\"}",
+      "databaseOnlyExpectedStatusChanged": true,
+      "getStatus": null,
+      "passed": true
+    },
+    {
+      "scenario": "sick_exhausted",
+      "requestId": 14,
+      "http": 200,
+      "body": "{\"id\":14,\"employeeId\":4,\"employee\":{\"id\":4,\"name\":\"B2 QA 20260909-165439\",\"annualQuota\":20},\"type\":1,\"startDate\":\"2026-07-01\",\"endDate\":\"2026-07-03\",\"status\":1,\"days\":3}",
+      "databaseOnlyExpectedStatusChanged": true,
+      "getStatus": 1,
+      "passed": true
+    },
+    {
+      "scenario": "unpaid_exhausted",
+      "requestId": 15,
+      "http": 200,
+      "body": "{\"id\":15,\"employeeId\":4,\"employee\":{\"id\":4,\"name\":\"B2 QA 20260909-165439\",\"annualQuota\":20},\"type\":2,\"startDate\":\"2026-08-01\",\"endDate\":\"2026-08-03\",\"status\":1,\"days\":3}",
+      "databaseOnlyExpectedStatusChanged": true,
+      "getStatus": 1,
+      "passed": true
+    }
+  ],
+  "uiEmployeeId": 5,
+  "uiRequestId": 17,
+  "uiStatus": "APPROVED: browser click, reload, fresh GET and SQL verified",
+  "recordsRetained": true,
+  "uiEvidence": {
+    "observedRow": "17 B2 QA 20260909-165439 UI Vacation 01/11/2026 02/11/2026 2 Approved",
+    "sql": "17|5|0|1|2026-11-01|2026-11-02|2",
+    "freshGetStatus": 1,
+    "checkedAt": "2026-09-09T16:58:38.364024+03:00"
+  }
+}

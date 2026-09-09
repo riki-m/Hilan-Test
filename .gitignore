@@ -64,3 +64,6 @@ frontend/.angular/
 # Machine-local tools and execution evidence
 .local-tools/
 .local-run/
+
+# Local exported documents; not application source
+/output/
