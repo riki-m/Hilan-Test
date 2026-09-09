@@ -12,6 +12,7 @@ import jakarta.persistence.PersistenceContext;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -61,23 +62,35 @@ public class LeaveRequestsController {
     // POST /api/leave-requests
     @PostMapping
     public ResponseEntity<?> create(@RequestBody CreateLeaveRequestDto dto) {
+        if (dto == null || dto.getEmployeeId() == null || dto.getType() == null
+                || dto.getStartDate() == null || dto.getEndDate() == null
+                || dto.getStartDate().isAfter(dto.getEndDate())) {
+            return ResponseEntity.badRequest().body("Employee, leave type and a valid date range are required");
+        }
+        long requestedDays = ChronoUnit.DAYS.between(dto.getStartDate(), dto.getEndDate()) + 1;
+        if (requestedDays > Integer.MAX_VALUE) {
+            return ResponseEntity.badRequest().body("Date range is too long");
+        }
         Employee employee = employeeRepository.findById(dto.getEmployeeId()).orElse(null);
         if (employee == null) {
             return ResponseEntity.status(404).body("Employee not found");
         }
 
-        int days = (int) ChronoUnit.DAYS.between(dto.getStartDate(), dto.getEndDate()) + 1;
-
-        // How many vacation days has the employee already used this year?
-        int used = leaveRequestRepository
-                .findByEmployeeIdAndTypeAndStatus(dto.getEmployeeId(), LeaveType.VACATION, LeaveStatus.APPROVED)
-                .stream()
-                .mapToInt(LeaveRequest::getDays)
-                .sum();
-
-        // Make sure the request does not exceed the quota.
-        if (dto.getType() == LeaveType.VACATION && days > employee.getAnnualQuota()) {
-            return ResponseEntity.badRequest().body("Not enough vacation balance");
+        int days = (int) requestedDays;
+        if (dto.getType() == LeaveType.VACATION) {
+            List<LeaveRequest> approved = leaveRequestRepository
+                    .findByEmployeeIdAndTypeAndStatus(dto.getEmployeeId(), LeaveType.VACATION, LeaveStatus.APPROVED);
+            // Each calendar year has its own quota; split cross-year ranges by overlap.
+            for (int year = dto.getStartDate().getYear(); year <= dto.getEndDate().getYear(); year++) {
+                LocalDate yearStart = LocalDate.of(year, 1, 1);
+                LocalDate yearEnd = LocalDate.of(year, 12, 31);
+                long used = approved.stream().mapToLong(request -> daysWithin(
+                        request.getStartDate(), request.getEndDate(), yearStart, yearEnd)).sum();
+                long requestedInYear = daysWithin(dto.getStartDate(), dto.getEndDate(), yearStart, yearEnd);
+                if (used + requestedInYear > employee.getAnnualQuota()) {
+                    return ResponseEntity.badRequest().body("Not enough vacation balance");
+                }
+            }
         }
 
         LeaveRequest request = new LeaveRequest();
@@ -91,5 +104,11 @@ public class LeaveRequestsController {
         leaveRequestRepository.save(request);
 
         return ResponseEntity.ok(request);
+    }
+
+    private static long daysWithin(LocalDate start, LocalDate end, LocalDate yearStart, LocalDate yearEnd) {
+        LocalDate overlapStart = start.isAfter(yearStart) ? start : yearStart;
+        LocalDate overlapEnd = end.isBefore(yearEnd) ? end : yearEnd;
+        return overlapStart.isAfter(overlapEnd) ? 0 : ChronoUnit.DAYS.between(overlapStart, overlapEnd) + 1;
     }
 }
