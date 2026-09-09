@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-09-09T16:32:53.472914+03:00",
+  "url": "http://localhost:4200/",
+  "method": "CUA browser DOM snapshot after reload",
+  "employeeId": 3,
+  "employeeLabel": "B1 QA 20260909-162818",
+  "observedIds": [
+    7,
+    6,
+    5,
+    4,
+    3,
+    2
+  ],
+  "pendingIds": [
+    7,
+    6,
+    5,
+    4
+  ],
+  "exactBalanceRow": "4 Vacation 01/05/2026 02/05/2026 2 Pending",
+  "rejectedMay1To3Absent": true,
+  "rejectedOctober1To21Absent": true,
+  "creationVia": "HTTP API, not UI",
+  "createFormAvailable": false,
+  "approvalNotTested": true
+}

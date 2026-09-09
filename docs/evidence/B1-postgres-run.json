@@ -1,0 +1,97 @@
+{
+  "completedAt": "2026-09-09T16:28:06+03:00",
+  "productionCommit": "934c168",
+  "command": "mvn.cmd -o -Dmaven.repo.local=../.local-tools/m2 -Dapi.version=1.44 -Dtest=LeaveBalanceTests,LeaveRequestHttpTests,LeaveRequestsTests test",
+  "dockerHost": "npipe:////./pipe/dockerDesktopLinuxEngine",
+  "log": ".local-run/b1-postgres-final.log",
+  "suites": [
+    {
+      "name": "com.example.leavemanagement.LeaveBalanceTests",
+      "tests": "20",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "3.624",
+      "cases": [
+        "create_AllowsOtherLeaveTypesWithExhaustedVacation",
+        "create_RejectsReversedDates",
+        "create_RejectsMissingFieldsBeforeRepositoryAccess",
+        "create_RejectsUnrepresentableDayCount",
+        "create_UnknownEmployeeReturns404WithoutSaving",
+        "create_ChecksEachCalendarYear(String, String, String, String, int, boolean)[1]",
+        "create_ChecksEachCalendarYear(String, String, String, String, int, boolean)[2]",
+        "create_ChecksEachCalendarYear(String, String, String, String, int, boolean)[3]",
+        "create_ChecksEachCalendarYear(String, String, String, String, int, boolean)[4]",
+        "create_ChecksEachCalendarYear(String, String, String, String, int, boolean)[5]",
+        "create_ChecksEachCalendarYear(String, String, String, String, int, boolean)[6]",
+        "create_ChecksEachCalendarYear(String, String, String, String, int, boolean)[7]",
+        "create_SingleDayConsumesOneDay",
+        "create_RespectsRemainingBalance(int, int, boolean)[1]",
+        "create_RespectsRemainingBalance(int, int, boolean)[2]",
+        "create_RespectsRemainingBalance(int, int, boolean)[3]",
+        "create_RespectsRemainingBalance(int, int, boolean)[4]",
+        "create_RespectsRemainingBalance(int, int, boolean)[5]",
+        "create_RespectsRemainingBalance(int, int, boolean)[6]",
+        "create_SumsMultipleApprovedRequests"
+      ]
+    },
+    {
+      "name": "com.example.leavemanagement.LeaveRequestHttpTests",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "3.271",
+      "cases": [
+        "rejectsExcessAs400WithoutSaving",
+        "rejectsMissingFields",
+        "acceptsExactBalanceWithPendingJson",
+        "rejectsMalformedDate"
+      ]
+    },
+    {
+      "name": "com.example.leavemanagement.LeaveRequestsTests",
+      "tests": "13",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "36.691",
+      "cases": [
+        "balanceQuery_OnlyIncludesSelectedEmployeesApprovedVacation",
+        "create_UsesPersistedCalendarYearHistory(String, String, String, String, boolean)[1]",
+        "create_UsesPersistedCalendarYearHistory(String, String, String, String, boolean)[2]",
+        "create_UsesPersistedCalendarYearHistory(String, String, String, String, boolean)[3]",
+        "create_UsesPersistedCalendarYearHistory(String, String, String, String, boolean)[4]",
+        "create_UsesPersistedCalendarYearHistory(String, String, String, String, boolean)[5]",
+        "create_UsesPersistedCalendarYearHistory(String, String, String, String, boolean)[6]",
+        "create_UsesPersistedCalendarYearHistory(String, String, String, String, boolean)[7]",
+        "create_UsesPersistedCalendarYearHistory(String, String, String, String, boolean)[8]",
+        "create_UsesPersistedCalendarYearHistory(String, String, String, String, boolean)[9]",
+        "create_ExceedingRemainingQuota_IsRejectedWithoutSaving",
+        "create_SumsMultiplePersistedVacations",
+        "create_WithinQuota_Succeeds"
+      ]
+    }
+  ],
+  "sourceSha256": {
+    "backend/src/main/java/com/example/leavemanagement/config/DataSeeder.java": "d8336b882eafd666f8eda815cc9629b444f277c766490e83d821e6513aa2564d",
+    "backend/src/main/java/com/example/leavemanagement/config/WebConfig.java": "8652df904fcc3932f8003f451080fa7924961895ba87963e02d79961ed1fbbea",
+    "backend/src/main/java/com/example/leavemanagement/controller/EmployeesController.java": "3592d6ee089e1fcc4183f767a41b1609847b65aefc580762db661021db7b59ae",
+    "backend/src/main/java/com/example/leavemanagement/controller/LeaveRequestsController.java": "ce721c17f06272357384cf570d39a9376a2a73a6048816fd6114ab1efe1eb39e",
+    "backend/src/main/java/com/example/leavemanagement/dto/CreateLeaveRequestDto.java": "6dc0f45ef7114491e9e585741dd5af91fb96eb2755b370987fb842038a6531f4",
+    "backend/src/main/java/com/example/leavemanagement/LeaveManagementApplication.java": "7aa6f2959cc5291e7d50d2ea0e461e3fad5c24462083ff27b9e68d0dc14cab40",
+    "backend/src/main/java/com/example/leavemanagement/model/Employee.java": "3cde2ac846afdf1c205a7430d6646def374d4dd494f49cf64fe8aa92432cd4d3",
+    "backend/src/main/java/com/example/leavemanagement/model/LeaveRequest.java": "415af18e74e2ab69d7c55f5a14ec3e88e310f20998d05c1ff11ec356bbc2c1d2",
+    "backend/src/main/java/com/example/leavemanagement/model/LeaveStatus.java": "98fa30c316ba75a449dfdefeb9469ebaecb6cff2bfa1448dc420696d8cc8be49",
+    "backend/src/main/java/com/example/leavemanagement/model/LeaveType.java": "53e77ec27743e73edfda2709475b3909babe3ece0c4c541ba16d1b1f0ec0422f",
+    "backend/src/main/java/com/example/leavemanagement/repository/EmployeeRepository.java": "7a52b9bc048f28cb7a2704354bd9e3a9aabbaa043b263042f49204bd3200fffb",
+    "backend/src/main/java/com/example/leavemanagement/repository/LeaveRequestRepository.java": "5712a1a448106d5b944204537d94235703660a9b41e3b3384174bea63e2ecfe6",
+    "backend/src/main/java/com/example/leavemanagement/service/LeaveApprovalService.java": "4d6fe55010d48c727c9db1c735c44c70247c1a7a993bd8d838f67e3a69a0268e",
+    "backend/src/main/java/com/example/leavemanagement/service/VacationBalancePolicy.java": "b9ceaefc732011714addab8f70fd967bbf51d77f84d0154c8c2eb9ff45388832",
+    "backend/src/test/java/com/example/leavemanagement/LeaveApprovalHttpTests.java": "152c2b34a6a36a75691ec86010e6d10b7e315f818fb346e02128a4cf5286cc61",
+    "backend/src/test/java/com/example/leavemanagement/LeaveApprovalTests.java": "64b73310391a108dda0eda93ce479ac1254dc2668413e4f45f33526987a26ed5",
+    "backend/src/test/java/com/example/leavemanagement/LeaveBalanceTests.java": "0f646a246b1607dcc4f58a98d093a1f759a55024739cb2caf19d3dcf4c46ea4b",
+    "backend/src/test/java/com/example/leavemanagement/LeaveRequestHttpTests.java": "6f7db8fc2452fc8f2d75d82435f842e4b821683e704b7ccf9dd2dd06ac63c8db",
+    "backend/src/test/java/com/example/leavemanagement/LeaveRequestsTests.java": "82a59844a62d8f2a0f262dcbe7c90244d4617e91f196fb251d59b64b29585343"
+  }
+}
