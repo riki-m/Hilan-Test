@@ -22,6 +22,10 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDate;
+import java.util.List;
+import com.example.leavemanagement.service.LeaveRequestService;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -46,6 +50,9 @@ class LeaveRequestsTests {
 
     @Autowired
     private EmployeeRepository employees;
+
+    @Autowired private LeaveRequestService requestService;
+    @Autowired private PlatformTransactionManager transactionManager;
 
     @Autowired
     private LeaveRequestRepository leaveRequests;
@@ -181,6 +188,49 @@ class LeaveRequestsTests {
             assertEquals(employee.getId(), stored.getEmployeeId());
             assertEquals(ChronoUnit.DAYS.between(dto.getStartDate(), dto.getEndDate())+1, stored.getDays());
         } else assertEquals("Not enough vacation balance", result.getBody());
+    }
+
+    @Test
+    void serviceCreationRollsBackWithItsTransaction() {
+        Employee e = new Employee(); e.setName("B3 creation rollback"); e.setAnnualQuota(20);
+        employees.saveAndFlush(e);
+        CreateLeaveRequestDto dto = new CreateLeaveRequestDto();
+        dto.setEmployeeId(e.getId()); dto.setType(LeaveType.VACATION);
+        dto.setStartDate(LocalDate.of(2026, 4, 1)); dto.setEndDate(dto.getStartDate());
+        long before = leaveRequests.count();
+        assertThrows(IllegalStateException.class, () -> new TransactionTemplate(transactionManager).execute(status -> {
+            LeaveRequest created = requestService.create(dto);
+            leaveRequests.flush();
+            assertEquals(LeaveStatus.PENDING, created.getStatus());
+            assertTrue(leaveRequests.existsById(created.getId()));
+            throw new IllegalStateException("Deliberate failure after creation flush");
+        }));
+        assertEquals(before, leaveRequests.count());
+    }
+
+    @Test
+    void listIsSortedAndSearchBindsNamesAsData() {
+        Employee employee = new Employee();
+        employee.setName("B3 O'Brien lookup"); employee.setAnnualQuota(20);
+        employees.saveAndFlush(employee);
+        LeaveRequest first = saveHistory(employee, LeaveType.VACATION, LeaveStatus.APPROVED);
+        LeaveRequest second = saveHistory(employee, LeaveType.SICK, LeaveStatus.PENDING);
+        second.setStartDate(LocalDate.of(2027, 2, 1));
+        second.setEndDate(LocalDate.of(2027, 2, 2)); second.setDays(2);
+        leaveRequests.saveAndFlush(second);
+        List<LeaveRequest> all = controller.getAll().getBody();
+        assertNotNull(all);
+        for (int i = 1; i < all.size(); i++) {
+            assertFalse(all.get(i - 1).getStartDate().isBefore(all.get(i).getStartDate()));
+        }
+        var results = controller.search("O'Brien").getBody();
+        assertNotNull(results);
+        assertEquals(java.util.Set.of(first.getId(), second.getId()),
+                results.stream().map(LeaveRequest::getId).collect(java.util.stream.Collectors.toSet()));
+        assertTrue(controller.search("') OR TRUE --").getBody().isEmpty());
+        assertTrue(controller.search("B3-no-such-employee").getBody().isEmpty());
+        // LIKE wildcard matching remains part of the existing search contract.
+        assertTrue(controller.search("B3%lookup").getBody().stream().anyMatch(r -> r.getId().equals(first.getId())));
     }
 
     private LeaveRequest saveHistory(Employee employee, LeaveType type, LeaveStatus status) {

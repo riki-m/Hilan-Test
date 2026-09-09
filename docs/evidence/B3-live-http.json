@@ -1,0 +1,86 @@
+{
+  "checkedAt": "2026-09-09T17:26:32.6756034+03:00",
+  "employeeId": 6,
+  "employeeLabel": "B3 O'Brien QA 20260909-172621",
+  "exactRequestId": 19,
+  "pendingRequestId": 20,
+  "uiRequestId": 21,
+  "results": [
+    {
+      "name": "create_excess",
+      "status": 400,
+      "body": "Not enough vacation balance"
+    },
+    {
+      "name": "create_exact",
+      "status": 200,
+      "body": "{\"id\":19,\"employeeId\":6,\"employee\":null,\"type\":0,\"startDate\":\"2026-03-01\",\"endDate\":\"2026-03-02\",\"status\":0,\"days\":2}"
+    },
+    {
+      "name": "create_second_pending",
+      "status": 200,
+      "body": "{\"id\":20,\"employeeId\":6,\"employee\":null,\"type\":0,\"startDate\":\"2026-04-01\",\"endDate\":\"2026-04-01\",\"status\":0,\"days\":1}"
+    },
+    {
+      "name": "approve_exact",
+      "status": 200,
+      "body": "{\"id\":19,\"employeeId\":6,\"employee\":{\"id\":6,\"name\":\"B3 O'Brien QA 20260909-172621\",\"annualQuota\":20},\"type\":0,\"startDate\":\"2026-03-01\",\"endDate\":\"2026-03-02\",\"status\":1,\"days\":2}"
+    },
+    {
+      "name": "approve_again",
+      "status": 409,
+      "body": "Only pending requests can be approved"
+    },
+    {
+      "name": "approve_exhausted",
+      "status": 409,
+      "body": "Not enough vacation balance"
+    },
+    {
+      "name": "missing_fields",
+      "status": 400,
+      "body": "Employee, leave type and a valid date range are required"
+    },
+    {
+      "name": "missing_approval",
+      "status": 404,
+      "body": "Leave request not found"
+    },
+    {
+      "name": "list",
+      "status": 200,
+      "body": "[{\"id\":17,\"employeeId\":5,\"employee\":{\"id\":5,\"name\":\"B2 QA 20260909-165439 UI\",\"annualQuota\":20},\"type\":0,\"startDate\":\"2026-11-01\",\"endDate\":\"2026-11-02\",\"status\":1,\"days\":2},{\"id\":7,\"employeeId\":3,\"employee\":{\"id\":3,\"name\":\"B1 QA 20260909-162818\",\"annualQuota\":20},\"type\":0,\"startDate\":\"2026-09-01\",\"endDate\":\"2026-09-01\",\"status\":0,\"days\":1},{\"id\":15,\"employeeId\":4,\"employee\":{\"id\":4,\"name\":\"B2 QA 20260909-165439\",\"annualQuota\":20},\"type\":2,\"startDate\":\"2026-08-01\",\"endDate\":\"2026-08-03\",\"status\":1,\"days\":3},{\"id\":6,\"employeeId\":3,\"employee\":{\"id\":3,\"name\":\"B1 QA 20260909-162818\",\"annualQuota\":20},\"type\":2,\"startDate\":\"2026-08-01\",\"endDate\":\"2026-08-03\",\"status\":0,\"days\":3},{\"id\":14,\"employeeId\":4,\"employee\":{\"id\":4,\"name\":\"B2 QA 20260909-165439\",\"annualQuota\":20},\"type\":1,\"startDate\":\"2026-07-01\",\"endDate\":\"2026-07-03\",\"status\":1,\"days\":3},{\"id\":5,\"employeeId\":3,\"employee\":{\"id\":3,\"name\":\"B1 QA 20260909-162818\",\"annualQuota\":20},\"type\":1,\"startDate\":\"2026-07-01\",\"endDate\":\"2026-07-03\",\"status\":0,\"days\":3},{\"id\":13,\"employeeId\":4,\"employee\":{\"id\":4,\"name\":\"B2 QA 20260909-165439\",\"annualQuota\":20},\"type\":0,\"startDate\":\"2026-06-01\",\"endDate\":\"2026-06-02\",\"status\":2,\"days\":2},{\"id\":4,\"employeeId\":3,\"employee\":{\"id\":3,\"name\":\"B1 QA 20260909-162818\",\"annualQuota\":20},\"type\":0,\"startDate\":\"2026-05-01\",\"endDate\":\"2026-05-02\",\"status\":0,\"days\":2},{\"id\":12,\"employeeId\":4,\"employee\":{\"id\":4,\"name\":\"B2 QA 20260909-165439\",\"annualQuota\":20},\"type\":0,\"startDate\":\"2026-05-01\",\"endDate\":\"2026-05-01\",\"status\":0,\"days\":1},{\"id\":11,\"employeeId\":4,\"employee\":{\"id\":4,\"name\":\"B2 QA 20260909-165439\",\"annualQuota\":20},\"type\":0,\"startDate\":\"2026-04-01\",\"endDate\":\"2026-04-02\",\"status\":1,\"days\":2},{\"id\":20,\"employeeId\":6,\"employee\":{\"id\":6,\"name\":\"B3 O'Brien QA 20260909-172621\",\"annualQuota\":20},\"type\":0,\"startDate\":\"2026-04-01\",\"endDate\":\"2026-04-01\",\"status\":0,\"days\":1},{\"id\":19,\"employeeId\":6,\"employee\":{\"id\":6,\"name\":\"B3 O'Brien QA 20260909-172621\",\"annualQuota\":20},\"type\":0,\"startDate\":\"2026-03-01\",\"endDate\":\"2026-03-02\",\"status\":1,\"days\":2},{\"id\":10,\"employeeId\":4,\"employee\":{\"id\":4,\"name\":\"B2 QA 20260909-165439\",\"annualQuota\":20},\"type\":0,\"startDate\":\"2026-03-01\",\"endDate\":\"2026-03-03\",\"status\":0,\"days\":3},{\"id\":3,\"employeeId\":3,\"employee\":{\"id\":3,\"name\":\"B1 QA 20260909-162818\",\"annualQuota\":20},\"type\":0,\"startDate\":\"2026-02-01\",\"endDate\":\"2026-02-08\",\"status\":1,\"days\":8},{\"id\":9,\"employeeId\":4,\"employee\":{\"id\":4,\"name\":\"B2 QA 20260909-165439\",\"annualQuota\":20},\"type\":0,\"startDate\":\"2026-02-01\",\"endDate\":\"2026-02-08\",\"status\":1,\"days\":8},{\"id\":1,\"employeeId\":1,\"employee\":{\"id\":1,\"name\":\"Dana Levi\",\"annualQuota\":20},\"type\":0,\"startDate\":\"2026-01-06\",\"endDate\":\"2026-01-23\",\"status\":1,\"days\":18},{\"id\":16,\"employeeId\":5,\"employee\":{\"id\":5,\"name\":\"B2 QA 20260909-165439 UI\",\"annualQuota\":20},\"type\":0,\"startDate\":\"2026-01-01\",\"endDate\":\"2026-01-18\",\"status\":1,\"days\":18},{\"id\":18,\"employeeId\":6,\"employee\":{\"id\":6,\"name\":\"B3 O'Brien QA 20260909-172621\",\"annualQuota\":20},\"type\":0,\"startDate\":\"2026-01-01\",\"endDate\":\"2026-01-18\",\"status\":1,\"days\":18},{\"id\":2,\"employeeId\":3,\"employee\":{\"id\":3,\"name\":\"B1 QA 20260909-162818\",\"annualQuota\":20},\"type\":0,\"startDate\":\"2026-01-01\",\"endDate\":\"2026-01-10\",\"status\":1,\"days\":10},{\"id\":8,\"employeeId\":4,\"employee\":{\"id\":4,\"name\":\"B2 QA 20260909-165439\",\"annualQuota\":20},\"type\":0,\"startDate\":\"2026-01-01\",\"endDate\":\"2026-01-10\",\"status\":1,\"days\":10}]"
+    },
+    {
+      "name": "search_quote_name",
+      "status": 200,
+      "body": "[{\"id\":18,\"employeeId\":6,\"employee\":{\"id\":6,\"name\":\"B3 O'Brien QA 20260909-172621\",\"annualQuota\":20},\"type\":0,\"startDate\":\"2026-01-01\",\"endDate\":\"2026-01-18\",\"status\":1,\"days\":18},{\"id\":20,\"employeeId\":6,\"employee\":{\"id\":6,\"name\":\"B3 O'Brien QA 20260909-172621\",\"annualQuota\":20},\"type\":0,\"startDate\":\"2026-04-01\",\"endDate\":\"2026-04-01\",\"status\":0,\"days\":1},{\"id\":19,\"employeeId\":6,\"employee\":{\"id\":6,\"name\":\"B3 O'Brien QA 20260909-172621\",\"annualQuota\":20},\"type\":0,\"startDate\":\"2026-03-01\",\"endDate\":\"2026-03-02\",\"status\":1,\"days\":2}]"
+    },
+    {
+      "name": "search_injection",
+      "status": 200,
+      "body": "[]"
+    },
+    {
+      "name": "employees_lookup",
+      "status": 200,
+      "body": "[{\"id\":1,\"name\":\"Dana Levi\",\"annualQuota\":20},{\"id\":2,\"name\":\"Yossi Cohen\",\"annualQuota\":14},{\"id\":3,\"name\":\"B1 QA 20260909-162818\",\"annualQuota\":20},{\"id\":4,\"name\":\"B2 QA 20260909-165439\",\"annualQuota\":20},{\"id\":5,\"name\":\"B2 QA 20260909-165439 UI\",\"annualQuota\":20},{\"id\":6,\"name\":\"B3 O'Brien QA 20260909-172621\",\"annualQuota\":20}]"
+    },
+    {
+      "name": "prepare_ui_sick",
+      "status": 200,
+      "body": "{\"id\":21,\"employeeId\":6,\"employee\":null,\"type\":1,\"startDate\":\"2026-12-01\",\"endDate\":\"2026-12-01\",\"status\":0,\"days\":1}"
+    }
+  ],
+  "databaseChecksPassed": true,
+  "recordsRetained": true,
+  "ui": {
+    "afterReload": "Approved",
+    "observed": "Sick 01/12/2026 01/12/2026 1 Approved",
+    "checkedAt": "2026-09-09T17:27:56.8524950+03:00",
+    "employeeId": 6,
+    "requestId": 21,
+    "freshGetStatus": 1,
+    "sql": "6|1|1|2026-12-01|2026-12-01|1"
+  }
+}

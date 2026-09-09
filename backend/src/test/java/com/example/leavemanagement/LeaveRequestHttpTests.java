@@ -1,6 +1,7 @@
 package com.example.leavemanagement;
 
 import com.example.leavemanagement.controller.LeaveRequestsController;
+import com.example.leavemanagement.service.LeaveRequestService;
 import com.example.leavemanagement.model.Employee;
 import com.example.leavemanagement.model.LeaveRequest;
 import com.example.leavemanagement.model.LeaveStatus;
@@ -39,7 +40,7 @@ class LeaveRequestHttpTests {
         previous.setEndDate(LocalDate.of(2026, 1, 18));
         when(requests.findByEmployeeIdAndTypeAndStatus(1L, LeaveType.VACATION, LeaveStatus.APPROVED))
                 .thenReturn(List.of(previous));
-        mvc = MockMvcBuilders.standaloneSetup(new LeaveRequestsController(employees, requests, mock(com.example.leavemanagement.service.LeaveApprovalService.class))).build();
+        mvc = MockMvcBuilders.standaloneSetup(new LeaveRequestsController(new LeaveRequestService(employees, requests), mock(com.example.leavemanagement.service.LeaveApprovalService.class))).build();
     }
 
     @Test
@@ -75,6 +76,18 @@ class LeaveRequestHttpTests {
         mvc.perform(post("/api/leave-requests").contentType(MediaType.APPLICATION_JSON)
                 .content(payload("invalid-date"))).andExpect(status().isBadRequest());
         verifyNoInteractions(requests);
+    }
+
+    @Test
+    void mapsMissingEmployeeTo404() throws Exception {
+        var service = mock(LeaveRequestService.class);
+        when(service.create(any())).thenThrow(new LeaveRequestService.CreationException(
+                LeaveRequestService.Failure.EMPLOYEE_NOT_FOUND, "Employee not found"));
+        var isolated = MockMvcBuilders.standaloneSetup(new LeaveRequestsController(service,
+                mock(com.example.leavemanagement.service.LeaveApprovalService.class))).build();
+        isolated.perform(post("/api/leave-requests").contentType(MediaType.APPLICATION_JSON)
+                .content(payload("2026-03-02")))
+                .andExpect(status().isNotFound()).andExpect(content().string("Employee not found"));
     }
 
     private String payload(String end) {
