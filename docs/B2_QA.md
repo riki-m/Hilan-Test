@@ -45,13 +45,13 @@ H: [B2-live-http.json](evidence/B2-live-http.json) — 11 בדיקות POST אמ
 | M03 MockMvc | שגיאת מצב: HTTP 409 והודעה | עבר | mapsBusinessErrors[2] |
 | M04 MockMvc | חוסר יתרה: HTTP 409 והודעה | עבר | mapsBusinessErrors[3] |
 | R01 רגרסיה | 37 בדיקות B1, כולל 13 PostgreSQL | עבר | R; רשימת תרחישי B1 נשארת ב-B1_QA |
-| P01 PostgreSQL | APPROVED נשמר ונקרא מחדש | טרם הורץ | approvalIsPersisted R; הורץ מול PostgreSQL |
-| P02 PostgreSQL | חריגה אינה משנה PENDING במסד | טרם הורץ | insufficientBalanceDoesNotChangeStoredStatus R; הורץ מול PostgreSQL |
-| P03 PostgreSQL | חריגה לאחר flush מבטלת שינוי במסד | טרם הורץ | outerFailureRollsBackFlushedApproval R; הורץ מול PostgreSQL |
-| P04 PostgreSQL | שתי בקשות שונות: רק אחת מאושרת כששתיהן חורגות יחד | טרם הורץ | concurrentDifferentRequestsCannotExceedQuota R; הורץ מול PostgreSQL |
-| P05 PostgreSQL | שני אישורים לאותה בקשה: הצלחה אחת ו-409 אחד | טרם הורץ | concurrentSameRequestIsApprovedOnce R; הורץ מול PostgreSQL |
-| P06 PostgreSQL | ניצול 16 ושתי בקשות של 2 ימים: שתי הצלחות, שתי רשומות APPROVED וסך ניצול 20 | טרם הורץ | concurrentRequestsWithinQuotaBothSucceed R; הורץ מול PostgreSQL |
-| P07 PostgreSQL / B1 | אישור מוסיף ניצול פעם אחת; אישור חוזר נדחה; יצירה של 3 ימים נדחית ושל 2 מתקבלת; עובד אחר אינו משפיע | טרם הורץ | approvalUpdatesCreationBalanceWithoutDoubleChargeOrCrossEmployeeMixing R; הורץ מול PostgreSQL |
+| P01 PostgreSQL | APPROVED נשמר ונקרא מחדש | עבר | approvalIsPersisted R; הורץ מול PostgreSQL |
+| P02 PostgreSQL | חריגה אינה משנה PENDING במסד | עבר | insufficientBalanceDoesNotChangeStoredStatus R; הורץ מול PostgreSQL |
+| P03 PostgreSQL | חריגה לאחר flush מבטלת שינוי במסד | עבר | outerFailureRollsBackFlushedApproval R; הורץ מול PostgreSQL |
+| P04 PostgreSQL | שתי בקשות שונות: רק אחת מאושרת כששתיהן חורגות יחד | עבר | concurrentDifferentRequestsCannotExceedQuota R; הורץ מול PostgreSQL |
+| P05 PostgreSQL | שני אישורים לאותה בקשה: הצלחה אחת ו-409 אחד | עבר | concurrentSameRequestIsApprovedOnce R; הורץ מול PostgreSQL |
+| P06 PostgreSQL | ניצול 16 ושתי בקשות של 2 ימים: שתי הצלחות, שתי רשומות APPROVED וסך ניצול 20 | עבר | concurrentRequestsWithinQuotaBothSucceed R; הורץ מול PostgreSQL |
+| P07 PostgreSQL / B1 | אישור מוסיף ניצול פעם אחת; אישור חוזר נדחה; יצירה של 3 ימים נדחית ושל 2 מתקבלת; עובד אחר אינו משפיע | עבר | approvalUpdatesCreationBalanceWithoutDoubleChargeOrCrossEmployeeMixing R; הורץ מול PostgreSQL |
 | H01 HTTP ברשת | עובד 4: 10+8 מאושרים; בקשה 11 של 2 ימים מאושרת; ניסיון חוזר 409; שינוי סטטוס בלבד | עבר | H; גוף הצלחה כולל id=11, employeeId=4, type=0, status=1, days=2; GET ו-SQL תואמים |
 | UI01 ממשק | עובד 5, ניצול 18; בקשה 17 בת יומיים מאושרת בכפתור Approve | עבר | H/uiEvidence; Approved אחרי רענון, GET חדש ו-SQL; F2 לא בוצע |
 | P08 PostgreSQL — שנים | 8 קלטי שנים/מכסה זהים ל-U01–U08; רק הסטטוס המותר משתנה, שאר פרטי הבקשה נשמרים | עבר | R; calendarBalanceIsRecheckedFromDatabase[1–8] |
@@ -83,7 +83,7 @@ LeaveApprovalPostgresTests כולל כעת 19 בדיקות PostgreSQL. כל מב
 mvn.cmd -o '-Dmaven.repo.local=../.local-tools/m2' '-Dapi.version=1.44' test
 ```
 
-מדריך ידני מעודכן: [B2_MANUAL_CHECK](B2_MANUAL_CHECK.md). בעדכון ההמשך, באישור המשתמשת, נוסח B2 שולב ב-DECISIONS תוך שימור עריכת התיעוד המקבילה. הבדיקות והראיות נסקרו לקראת קומיט מורשה. לא בוצעו commit או push. אין מעבר ל-B3.
+מדריך ידני מעודכן: [B2_MANUAL_CHECK](B2_MANUAL_CHECK.md). בעדכון ההמשך, באישור המשתמשת, נוסח B2 שולב ב-DECISIONS תוך שימור עריכת התיעוד המקבילה. הבדיקות והראיות נסקרו לקראת קומיט מורשה. בהמשך נשמרו השינויים ב-0ddf6a2, הועלו ונכללו ב-main; B3 הושלם בסבב נפרד.
 
 ## היסטוריית האימות
 
@@ -93,8 +93,8 @@ mvn.cmd -o '-Dmaven.repo.local=../.local-tools/m2' '-Dapi.version=1.44' test
 
 ענף העבודה הנפרד הוא `codex/b2-verified`, שנוצר מ-8ceb793 ושומר את היסטוריית B1 ומימוש B2 הקודם 934c168. הרחבת בדיקות B2 והתיעוד נבדקו להכנסה לקומיט הפרסום באישור המשתמשת. הקומיט המעורב 3ecab8d כבר הוחלף בתיאום ב-8ceb793; הוא אינו HEAD ואין עוד צורך להפרידו כפעולה עתידית.
 
-לשמירה: הרחבת LeaveApprovalPostgresTests, DECISIONS, QA_REPORT, B2_QA, B2_MANUAL_CHECK, TASK_TRACKER, עדכון B2 ב-BASELINE_RUN והוצאת אבחון Windows הישן לארכיון מקומי ושלוש ראיות B2 (live-http, postgres-run, review-run), והחרגת output ב-.gitignore. הטיוטה שכבר מוזגה הועברה לארכיון .local-run ואינה תוצר הגשה. output מכיל PDF של B1 שנשמר מקומית ואינו שייך לקומיט B2.
+נשמרו בסבב B2: הרחבת LeaveApprovalPostgresTests, DECISIONS, QA_REPORT, B2_QA, B2_MANUAL_CHECK, TASK_TRACKER, עדכון B2 ב-BASELINE_RUN והוצאת אבחון Windows הישן לארכיון מקומי ושלוש ראיות B2 (live-http, postgres-run, review-run), והחרגת output ב-.gitignore. הטיוטה שכבר מוזגה הועברה לארכיון .local-run ואינה תוצר הגשה. output מכיל PDF של B1 שנשמר מקומית ואינו שייך לקומיט B2.
 
 מקורות Java הושוו ל-SHA256 של הרצת 83 הבדיקות ונמצאו זהים; עדכוני תיעוד אינם שינוי במימוש. בדיקות Mock נשמרו כבדיקות יחידה וחוזה, לצד PostgreSQL. אין צורך ב-GitHub Discussions, PR או סרטון לפי README. חלק ג כולל prompts אמיתיים ודוגמה להצעת AI שתוקנה ב-DECISIONS; בונוס SQL injection עדיין לא תוקן ולא נטען שהושלם.
 
-גבול האישור: B2 עומד בדרישות המימוש והאימות שנבדקו; אין הבטחת היעדר כל באג או השלמה של B3/F1–F3. יש לסקור את רשימת הקומיטים מול ענף היעד לפני push עתידי, משום שענף B2 כולל היסטוריה מקומית קודמת ולא רק את השינויים שטרם נשמרו.
+גבול האישור: B2 עומד בדרישות המימוש והאימות שנבדקו; אין הבטחת היעדר כל באג או השלמה של B3/F1–F3. מצב הפרסום הנוכחי: B2 כלול ב-main לאחר המיזוג וההעלאה; תוצאות B3 מפורטות בדוח הנפרד.

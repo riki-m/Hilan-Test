@@ -46,8 +46,8 @@
 
 אין למחוק או לאפס נתונים משותפים ואין להפעיל מחדש שרת של סוכן אחר ללא תיאום. גם אם B3 הושלם, אין להסיק מכך שבדיקות F1 המשולבות בוצעו.
 
-## נקודת שמירה מוצעת
+## נקודת שמירה שפורסמה
 
-הודעת commit מוצעת: `Implement F1 leave request form with validation and component tests`.
+הודעת commit (aa9bec6, כלול ב-main): `Implement F1 leave request form with validation and component tests`.
 
-לכלול את ארבעת קובצי הקומפוננטה והבדיקות, דוח זה ועדכוני F1 ב-DECISIONS.md, QA_REPORT.md ו-docs/TASK_TRACKER.md, לאחר סקירת diff. לאחר סבב התיעוד ניתנה הרשאת commit/push ל-F1. דרישות F2/F3 נותרו להמשך.
+הקומיט כולל את ארבעת קובצי הקומפוננטה והבדיקות, דוח זה ועדכוני F1 ב-DECISIONS.md, QA_REPORT.md ו-docs/TASK_TRACKER.md, לאחר סקירת diff ואישור המשתמשת. נוסף קומיט עיצוב a22b1ee, הכלול גם הוא ב-main. האימות המשולב נותר פתוח; אין להסיק שבדיקות הקומפוננטה הקודמות מאמתות את שינויי העיצוב המאוחרים. דרישות F2/F3 נותרו להמשך.
