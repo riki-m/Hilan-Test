@@ -1,0 +1,114 @@
+{
+  "recordedAt": "2026-09-09T13:11:00.2632591+03:00",
+  "runLog": ".local-run/b1-audit-final.log",
+  "command": "mvn.cmd -o '-Dmaven.repo.local=../.local-tools/m2' '-Dtest=LeaveBalanceTests,LeaveRequestHttpTests' test",
+  "result": "BUILD SUCCESS",
+  "serverStarted": false,
+  "databaseStarted": false,
+  "suites": [
+    {
+      "name": "LeaveBalanceTests",
+      "tests": "20",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "testCases": [
+        "create_AllowsOtherLeaveTypesWithExhaustedVacation",
+        "create_RejectsReversedDates",
+        "create_RejectsMissingFieldsBeforeRepositoryAccess",
+        "create_RejectsUnrepresentableDayCount",
+        "create_UnknownEmployeeReturns404WithoutSaving",
+        "create_ChecksEachCalendarYear(String, String, String, String, int, boolean)[1]",
+        "create_ChecksEachCalendarYear(String, String, String, String, int, boolean)[2]",
+        "create_ChecksEachCalendarYear(String, String, String, String, int, boolean)[3]",
+        "create_ChecksEachCalendarYear(String, String, String, String, int, boolean)[4]",
+        "create_ChecksEachCalendarYear(String, String, String, String, int, boolean)[5]",
+        "create_ChecksEachCalendarYear(String, String, String, String, int, boolean)[6]",
+        "create_ChecksEachCalendarYear(String, String, String, String, int, boolean)[7]",
+        "create_SingleDayConsumesOneDay",
+        "create_RespectsRemainingBalance(int, int, boolean)[1]",
+        "create_RespectsRemainingBalance(int, int, boolean)[2]",
+        "create_RespectsRemainingBalance(int, int, boolean)[3]",
+        "create_RespectsRemainingBalance(int, int, boolean)[4]",
+        "create_RespectsRemainingBalance(int, int, boolean)[5]",
+        "create_RespectsRemainingBalance(int, int, boolean)[6]",
+        "create_SumsMultipleApprovedRequests"
+      ]
+    },
+    {
+      "name": "LeaveRequestHttpTests",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "testCases": [
+        "rejectsExcessAs400WithoutSaving",
+        "rejectsMissingFields",
+        "acceptsExactBalanceWithPendingJson",
+        "rejectsMalformedDate"
+      ]
+    }
+  ],
+  "javaSources": [
+    {
+      "path": "backend/src/main/java/com/example/leavemanagement/config/DataSeeder.java",
+      "sha256": "D8336B882EAFD666F8EDA815CC9629B444F277C766490E83D821E6513AA2564D"
+    },
+    {
+      "path": "backend/src/main/java/com/example/leavemanagement/config/WebConfig.java",
+      "sha256": "8652DF904FCC3932F8003F451080FA7924961895BA87963E02D79961ED1FBBEA"
+    },
+    {
+      "path": "backend/src/main/java/com/example/leavemanagement/controller/EmployeesController.java",
+      "sha256": "3592D6EE089E1FCC4183F767A41B1609847B65AEFC580762DB661021DB7B59AE"
+    },
+    {
+      "path": "backend/src/main/java/com/example/leavemanagement/controller/LeaveRequestsController.java",
+      "sha256": "9F9F551204E4623EA2EF829AF542CDBAFB6007130E1B5F67777F985F069AAABD"
+    },
+    {
+      "path": "backend/src/main/java/com/example/leavemanagement/dto/CreateLeaveRequestDto.java",
+      "sha256": "6DC0F45EF7114491E9E585741DD5AF91FB96EB2755B370987FB842038A6531F4"
+    },
+    {
+      "path": "backend/src/main/java/com/example/leavemanagement/LeaveManagementApplication.java",
+      "sha256": "7AA6F2959CC5291E7D50D2EA0E461E3FAD5C24462083FF27B9E68D0DC14CAB40"
+    },
+    {
+      "path": "backend/src/main/java/com/example/leavemanagement/model/Employee.java",
+      "sha256": "3CDE2AC846AFDF1C205A7430D6646DEF374D4DD494F49CF64FE8AA92432CD4D3"
+    },
+    {
+      "path": "backend/src/main/java/com/example/leavemanagement/model/LeaveRequest.java",
+      "sha256": "415AF18E74E2AB69D7C55F5A14EC3E88E310F20998D05C1FF11EC356BBC2C1D2"
+    },
+    {
+      "path": "backend/src/main/java/com/example/leavemanagement/model/LeaveStatus.java",
+      "sha256": "98FA30C316BA75A449DFDEFEB9469EBAECB6CFF2BFA1448DC420696D8CC8BE49"
+    },
+    {
+      "path": "backend/src/main/java/com/example/leavemanagement/model/LeaveType.java",
+      "sha256": "53E77EC27743E73EDFDA2709475B3909BABE3ECE0C4C541BA16D1B1F0EC0422F"
+    },
+    {
+      "path": "backend/src/main/java/com/example/leavemanagement/repository/EmployeeRepository.java",
+      "sha256": "D8AC32FE66D7A6C92532FA8B374A3691483435B92FF07EC79E58191D5D1ED0FB"
+    },
+    {
+      "path": "backend/src/main/java/com/example/leavemanagement/repository/LeaveRequestRepository.java",
+      "sha256": "12DD65C99D6B829B7B12907CBC9D7FCD954E97F4B23CCD1FCD55AE905B40ADB1"
+    },
+    {
+      "path": "backend/src/test/java/com/example/leavemanagement/LeaveBalanceTests.java",
+      "sha256": "8E23085F3299C1F5F278F5FCAC88F57482F687BF63616FE5CCCE83218FCF89C7"
+    },
+    {
+      "path": "backend/src/test/java/com/example/leavemanagement/LeaveRequestHttpTests.java",
+      "sha256": "60757CBA75C3A625369EED075F7B5236F3C57B17C5B7B6D9F19C818BF57D3921"
+    },
+    {
+      "path": "backend/src/test/java/com/example/leavemanagement/LeaveRequestsTests.java",
+      "sha256": "423926D0BF5A05B16CBB38659212D840DF764821DB8395874DE75B23B286BCA5"
+    }
+  ]
+}
