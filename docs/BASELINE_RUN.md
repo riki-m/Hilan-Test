@@ -1,5 +1,22 @@
 # הכנת סביבת המקור — 2026-09-09
 
+## עדכון לאחר האתחול הראשון — 2026-09-09
+- אומת אתחול Windows ב-11:42. Docker לא הצליח להפעיל מנוע Linux; `HypervisorPresent=False` בעוד `VirtualizationFirmwareEnabled=True`.
+- בדיקה בהרשאת מנהל: `VirtualMachinePlatform=Enabled`, אך `Microsoft-Windows-Subsystem-Linux=Disabled`. בהגדרות האתחול לא הופיע ערך מפורש של `hypervisorlaunchtype`.
+- הופעל רכיב `Microsoft-Windows-Subsystem-Linux` עם `-NoRestart`, והוגדר `hypervisorlaunchtype Auto`. שתי הפעולות הצליחו; כעת שני רכיבי Windows מדווחים Enabled.
+- Windows החזיר `RestartNeeded=True`. נדרשת הפעלה מחדש נוספת בידי המשתמשת; לא בוצע אתחול אוטומטי.
+- ראיות מקומיות: `.local-run/virtualization-status.txt` ו-`.local-run/virtualization-repair.txt`.
+- לאחר האתחול יש לאמת שמנגנון הווירטואליזציה פועל וש-`docker info` מצליח, לפני הפעלת מסד הנתונים ובדיקות השרת. לא שונה קוד המטלה.
+
+## עדכון התקנות — 2026-09-09, 11:38
+- לאחר ניקוי מאושר נמצאו 8.68GB פנויים בכונן C בתחילת ההתקנה.
+- Docker Desktop הותקן בהצלחה בהתקנת משתמש; קוד יציאה 0 ויומן `Installation succeeded`. כלי Docker מדווח גרסה 29.7.2.
+- WSL הותקן בהצלחה; גרסה 2.7.13.0 וקרנל 6.18.33.2-2.
+- רכיב Windows בשם VirtualMachinePlatform הותקן. יומן DISM מציין `Reboot required=yes` ושהפעלה מחדש אוטומטית נמנעה.
+- ניסיון `docker info` החזיר `Docker Desktop is unable to start`. מנוע Docker טרם אומת, והשרת ומסד הנתונים עדיין לא הורצו.
+- הפעולה הבאה: המשתמשת תשמור עבודה ותפעיל מחדש את Windows. לאחר מכן לבדוק `docker info`, להפעיל את המערכת ולהריץ את בדיקת השרת המקורית.
+- לא בוצעה הפעלה מחדש ולא שונה קוד המטלה. סעיפי חסמי ההתקנה בהמשך המסמך מתארים את ההיסטוריה; החסם הנוכחי הוא הפעלה מחדש ואימות אחריה.
+
 ## גבולות השלב
 קליטת קוד המקור, הכנת כלים, בנייה והרצת הבדיקות הקיימות בלבד. אין תיקון באגים של המטלה.
 
