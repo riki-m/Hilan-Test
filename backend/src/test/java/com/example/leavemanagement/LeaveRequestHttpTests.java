@@ -39,7 +39,7 @@ class LeaveRequestHttpTests {
         previous.setEndDate(LocalDate.of(2026, 1, 18));
         when(requests.findByEmployeeIdAndTypeAndStatus(1L, LeaveType.VACATION, LeaveStatus.APPROVED))
                 .thenReturn(List.of(previous));
-        mvc = MockMvcBuilders.standaloneSetup(new LeaveRequestsController(employees, requests)).build();
+        mvc = MockMvcBuilders.standaloneSetup(new LeaveRequestsController(employees, requests, mock(com.example.leavemanagement.service.LeaveApprovalService.class))).build();
     }
 
     @Test

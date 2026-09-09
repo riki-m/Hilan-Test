@@ -12,7 +12,8 @@ import jakarta.persistence.PersistenceContext;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
+import com.example.leavemanagement.service.LeaveApprovalService;
+import com.example.leavemanagement.service.VacationBalancePolicy;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -23,14 +24,16 @@ import java.util.List;
 public class LeaveRequestsController {
 
     private final EmployeeRepository employeeRepository;
+    private final LeaveApprovalService approvalService;
     private final LeaveRequestRepository leaveRequestRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
 
     public LeaveRequestsController(EmployeeRepository employeeRepository,
-                                   LeaveRequestRepository leaveRequestRepository) {
+                                   LeaveRequestRepository leaveRequestRepository, LeaveApprovalService approvalService) {
         this.employeeRepository = employeeRepository;
+        this.approvalService = approvalService;
         this.leaveRequestRepository = leaveRequestRepository;
     }
 
@@ -80,16 +83,8 @@ public class LeaveRequestsController {
         if (dto.getType() == LeaveType.VACATION) {
             List<LeaveRequest> approved = leaveRequestRepository
                     .findByEmployeeIdAndTypeAndStatus(dto.getEmployeeId(), LeaveType.VACATION, LeaveStatus.APPROVED);
-            // Each calendar year has its own quota; split cross-year ranges by overlap.
-            for (int year = dto.getStartDate().getYear(); year <= dto.getEndDate().getYear(); year++) {
-                LocalDate yearStart = LocalDate.of(year, 1, 1);
-                LocalDate yearEnd = LocalDate.of(year, 12, 31);
-                long used = approved.stream().mapToLong(request -> daysWithin(
-                        request.getStartDate(), request.getEndDate(), yearStart, yearEnd)).sum();
-                long requestedInYear = daysWithin(dto.getStartDate(), dto.getEndDate(), yearStart, yearEnd);
-                if (used + requestedInYear > employee.getAnnualQuota()) {
-                    return ResponseEntity.badRequest().body("Not enough vacation balance");
-                }
+            if (!VacationBalancePolicy.fits(employee.getAnnualQuota(), dto.getStartDate(), dto.getEndDate(), approved)) {
+                return ResponseEntity.badRequest().body("Not enough vacation balance");
             }
         }
 
@@ -106,9 +101,12 @@ public class LeaveRequestsController {
         return ResponseEntity.ok(request);
     }
 
-    private static long daysWithin(LocalDate start, LocalDate end, LocalDate yearStart, LocalDate yearEnd) {
-        LocalDate overlapStart = start.isAfter(yearStart) ? start : yearStart;
-        LocalDate overlapEnd = end.isBefore(yearEnd) ? end : yearEnd;
-        return overlapStart.isAfter(overlapEnd) ? 0 : ChronoUnit.DAYS.between(overlapStart, overlapEnd) + 1;
+    @PostMapping("/{id}/approve")
+    public ResponseEntity<?> approve(@PathVariable("id") long id) {
+        try {
+            return ResponseEntity.ok(approvalService.approve(id));
+        } catch (LeaveApprovalService.ApprovalException ex) {
+            return ResponseEntity.status(ex.getStatus()).body(ex.getMessage());
+        }
     }
 }

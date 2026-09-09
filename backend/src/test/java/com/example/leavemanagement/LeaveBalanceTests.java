@@ -28,7 +28,7 @@ class LeaveBalanceTests {
     void create_RespectsRemainingBalance(int usedDays, int requestedDays, boolean accepted) {
         EmployeeRepository employees = mock(EmployeeRepository.class);
         LeaveRequestRepository requests = mock(LeaveRequestRepository.class);
-        LeaveRequestsController controller = new LeaveRequestsController(employees, requests);
+        LeaveRequestsController controller = new LeaveRequestsController(employees, requests, mock(com.example.leavemanagement.service.LeaveApprovalService.class));
         Employee employee = new Employee();
         employee.setId(1L);
         employee.setAnnualQuota(20);
@@ -105,7 +105,7 @@ class LeaveBalanceTests {
     void create_RejectsMissingFieldsBeforeRepositoryAccess() {
         EmployeeRepository employees = mock(EmployeeRepository.class);
         LeaveRequestRepository requests = mock(LeaveRequestRepository.class);
-        var controller = new LeaveRequestsController(employees, requests);
+        var controller = new LeaveRequestsController(employees, requests, mock(com.example.leavemanagement.service.LeaveApprovalService.class));
         assertEquals(400, controller.create(null).getStatusCode().value());
         for (int missing = 0; missing < 4; missing++) {
             CreateLeaveRequestDto dto = new CreateLeaveRequestDto();
@@ -133,7 +133,7 @@ class LeaveBalanceTests {
         dto.setType(LeaveType.VACATION);
         dto.setStartDate(LocalDate.of(2026, 1, 1));
         dto.setEndDate(dto.getStartDate());
-        assertEquals(404, new LeaveRequestsController(employees, requests)
+        assertEquals(404, new LeaveRequestsController(employees, requests, mock(com.example.leavemanagement.service.LeaveApprovalService.class))
                 .create(dto).getStatusCode().value());
         verifyNoInteractions(requests);
     }
@@ -161,7 +161,7 @@ class LeaveBalanceTests {
         dto.setType(type);
         dto.setStartDate(LocalDate.parse(start));
         dto.setEndDate(LocalDate.parse(end));
-        var response = new LeaveRequestsController(employees, requests).create(dto);
+        var response = new LeaveRequestsController(employees, requests, mock(com.example.leavemanagement.service.LeaveApprovalService.class)).create(dto);
         assertEquals(accepted ? 200 : 400, response.getStatusCode().value());
         if (accepted) {
             LeaveRequest saved = assertInstanceOf(LeaveRequest.class, response.getBody());
