@@ -9,3 +9,15 @@ button {
 button:hover {
   background: #186faf;
 }
+
+.request-form { background: #fff; padding: 20px; margin-bottom: 24px; border: 1px solid #d9e2ec; border-radius: 6px; }
+.request-form h3 { margin-top: 0; }
+fieldset { border: 0; padding: 16px 0 0; margin: 0; min-width: 0; }
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+label { display: block; margin-bottom: 6px; font-weight: 600; }
+input, select { box-sizing: border-box; width: 100%; padding: 8px; border: 1px solid #9fb3c8; border-radius: 4px; background: white; }
+.error { color: #a61b1b; }
+small.error { display: block; margin-top: 6px; }
+.success { color: #176b38; }
+button:disabled { opacity: .6; cursor: not-allowed; }
+input:focus-visible, select:focus-visible, button:focus-visible { outline: 2px solid #186faf; outline-offset: 2px; }

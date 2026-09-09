@@ -1,6 +1,49 @@
 <h2>Leave Requests</h2>
 
-<!-- TODO (candidate): add the "new request" form here, with validation. -->
+<form [formGroup]="createForm" (ngSubmit)="submit()" class="request-form" aria-labelledby="new-request-title">
+  <h3 id="new-request-title">New leave request</h3>
+  <p *ngIf="employeesLoading" role="status">Loading employees...</p>
+  <p *ngIf="employeesError" class="error" role="alert">{{ employeesError }}</p>
+  <p *ngIf="!employeesLoading && !employeesError && !employees.length">No employees available.</p>
+  <button type="button" (click)="loadEmployees()" [disabled]="employeesLoading || submitting">Reload employees</button>
+  <fieldset [disabled]="submitting || employeesLoading">
+    <div class="fields">
+      <div>
+        <label for="employee">Employee</label>
+        <select id="employee" formControlName="employeeId" aria-describedby="employee-error">
+          <option [ngValue]="null">Select an employee</option>
+          <option *ngFor="let employee of employees" [ngValue]="employee.id">{{ employee.name }}</option>
+        </select>
+        <small id="employee-error" class="error" *ngIf="createForm.controls.employeeId.touched && createForm.controls.employeeId.invalid">Select an available employee.</small>
+      </div>
+      <div>
+        <label for="leave-type">Leave type</label>
+        <select id="leave-type" formControlName="type" aria-describedby="type-error">
+          <option [ngValue]="null">Select a leave type</option>
+          <option [ngValue]="0">Vacation</option>
+          <option [ngValue]="1">Sick</option>
+          <option [ngValue]="2">Unpaid</option>
+        </select>
+        <small id="type-error" class="error" *ngIf="createForm.controls.type.touched && createForm.controls.type.invalid">Select a leave type.</small>
+      </div>
+      <div>
+        <label for="start-date">Start date</label>
+        <input id="start-date" type="date" formControlName="startDate" min="0001-01-01" max="9999-12-31" aria-describedby="start-error">
+        <small id="start-error" class="error" *ngIf="createForm.controls.startDate.touched && createForm.controls.startDate.invalid">Enter a valid start date.</small>
+      </div>
+      <div>
+        <label for="end-date">End date</label>
+        <input id="end-date" type="date" formControlName="endDate" min="0001-01-01" max="9999-12-31" aria-describedby="end-error date-order-error">
+        <small id="end-error" class="error" *ngIf="createForm.controls.endDate.touched && createForm.controls.endDate.invalid">Enter a valid end date.</small>
+        <small id="date-order-error" class="error" *ngIf="createForm.hasError('dateOrder')">End date must be on or after start date.</small>
+      </div>
+    </div>
+    <p>Calendar days: <strong>{{ requestedDays === null ? '—' : requestedDays }}</strong> (including start and end dates)</p>
+    <button type="submit" [disabled]="submitting || employeesLoading || loading || !!employeesError || !employees.length">{{ submitting ? 'Submitting...' : 'Submit request' }}</button>
+  </fieldset>
+  <p *ngIf="submitError" class="error" role="alert">{{ submitError }}</p>
+  <p *ngIf="submitSuccess" class="success" role="status">{{ submitSuccess }}</p>
+</form>
 
 <div *ngIf="loading">Loading...</div>
 
