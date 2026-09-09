@@ -9,6 +9,9 @@ import com.example.leavemanagement.model.LeaveType;
 import com.example.leavemanagement.repository.EmployeeRepository;
 import com.example.leavemanagement.repository.LeaveRequestRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import java.time.temporal.ChronoUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
@@ -127,6 +130,57 @@ class LeaveRequestsTests {
         var matches = leaveRequests.findByEmployeeIdAndTypeAndStatus(
                 employee.getId(), LeaveType.VACATION, LeaveStatus.APPROVED);
         assertEquals(java.util.List.of(included.getId()), matches.stream().map(LeaveRequest::getId).toList());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "2025-01-01,2025-01-20,2026-03-01,2026-03-03,true",
+        "2027-01-01,2027-01-20,2026-03-01,2026-03-03,true",
+        "2025-12-20,2026-01-02,2026-03-01,2026-03-19,false",
+        "2025-12-20,2026-01-02,2026-03-01,2026-03-18,true",
+        "2026-01-01,2026-01-18,2026-12-30,2027-01-02,true",
+        "2027-02-01,2027-02-19,2026-12-31,2027-01-02,false",
+        "2024-02-28,2024-03-01,2024-03-02,2024-03-19,false",
+        "2026-01-01,2026-01-20,2026-03-01,2026-03-01,false",
+        "2026-01-01,2026-01-19,2026-03-01,2026-03-01,true"
+    })
+    void create_UsesPersistedCalendarYearHistory(String from, String to, String start, String end, boolean accepted) {
+        Employee employee = new Employee(); employee.setName("B1 calendar integration"); employee.setAnnualQuota(20);
+        employees.saveAndFlush(employee);
+        LeaveRequest history = saveHistory(employee, LeaveType.VACATION, LeaveStatus.APPROVED);
+        history.setStartDate(LocalDate.parse(from)); history.setEndDate(LocalDate.parse(to));
+        history.setDays((int) ChronoUnit.DAYS.between(history.getStartDate(),history.getEndDate())+1);
+        leaveRequests.saveAndFlush(history);
+        verifyCreation(employee, start, end, accepted);
+    }
+
+    @Test void create_SumsMultiplePersistedVacations() {
+        Employee employee = new Employee(); employee.setName("B1 sum integration"); employee.setAnnualQuota(20);
+        employees.saveAndFlush(employee);
+        LeaveRequest first = saveHistory(employee, LeaveType.VACATION, LeaveStatus.APPROVED);
+        first.setEndDate(LocalDate.of(2026,1,10)); first.setDays(10); leaveRequests.saveAndFlush(first);
+        LeaveRequest second = saveHistory(employee, LeaveType.VACATION, LeaveStatus.APPROVED);
+        second.setStartDate(LocalDate.of(2026,2,1)); second.setEndDate(LocalDate.of(2026,2,8)); second.setDays(8);
+        leaveRequests.saveAndFlush(second);
+        verifyCreation(employee, "2026-03-01", "2026-03-03", false);
+        verifyCreation(employee, "2026-03-01", "2026-03-02", true);
+    }
+
+    private void verifyCreation(Employee employee, String start, String end, boolean accepted) {
+        CreateLeaveRequestDto dto = new CreateLeaveRequestDto(); dto.setEmployeeId(employee.getId()); dto.setType(LeaveType.VACATION);
+        dto.setStartDate(LocalDate.parse(start)); dto.setEndDate(LocalDate.parse(end));
+        long before = leaveRequests.count();
+        ResponseEntity<?> result = controller.create(dto);
+        assertEquals(accepted ? 200 : 400, result.getStatusCode().value());
+        assertEquals(before + (accepted ? 1 : 0), leaveRequests.count());
+        if (accepted) {
+            LeaveRequest created = assertInstanceOf(LeaveRequest.class, result.getBody());
+            LeaveRequest stored = leaveRequests.findById(created.getId()).orElseThrow();
+            assertEquals(LeaveStatus.PENDING, stored.getStatus());
+            assertEquals(dto.getStartDate(), stored.getStartDate()); assertEquals(dto.getEndDate(), stored.getEndDate());
+            assertEquals(employee.getId(), stored.getEmployeeId());
+            assertEquals(ChronoUnit.DAYS.between(dto.getStartDate(), dto.getEndDate())+1, stored.getDays());
+        } else assertEquals("Not enough vacation balance", result.getBody());
     }
 
     private LeaveRequest saveHistory(Employee employee, LeaveType type, LeaveStatus status) {
