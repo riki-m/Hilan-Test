@@ -53,3 +53,14 @@ Thumbs.db
 
 # Original assignment archives remain local for inspection
 *.zip
+
+# Additional original assignment exclusions
+backend/target/
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+.vs/
+
+# Machine-local tools and execution evidence
+.local-tools/
+.local-run/
