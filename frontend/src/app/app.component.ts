@@ -6,8 +6,8 @@ import { LeaveRequestsComponent } from './leave-requests/leave-requests.componen
   standalone: true,
   imports: [LeaveRequestsComponent],
   template: `
-    <h1>Leave Management</h1>
-    <app-leave-requests></app-leave-requests>
+    <header class="app-header"><span class="brand-mark" aria-hidden="true">L</span><h1>Leave Management</h1><span>Employee workspace</span></header>
+    <main><app-leave-requests></app-leave-requests></main>
   `
 })
 export class AppComponent {}

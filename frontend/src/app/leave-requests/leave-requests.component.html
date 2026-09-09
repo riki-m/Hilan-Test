@@ -1,7 +1,9 @@
 <h2>Leave Requests</h2>
+<p class="page-description">Plan time away and keep track of your team's leave requests.</p>
 
 <form [formGroup]="createForm" (ngSubmit)="submit()" class="request-form" aria-labelledby="new-request-title">
   <h3 id="new-request-title">New leave request</h3>
+  <p class="form-description">Choose an employee and the dates for their time away.</p>
   <p *ngIf="employeesLoading" role="status">Loading employees...</p>
   <p *ngIf="employeesError" class="error" role="alert">{{ employeesError }}</p>
   <p *ngIf="!employeesLoading && !employeesError && !employees.length">No employees available.</p>
@@ -38,8 +40,10 @@
         <small id="date-order-error" class="error" *ngIf="createForm.hasError('dateOrder')">End date must be on or after start date.</small>
       </div>
     </div>
-    <p>Calendar days: <strong>{{ requestedDays === null ? '—' : requestedDays }}</strong> (including start and end dates)</p>
+    <div class="form-footer">
+    <p class="day-summary">Calendar days: <strong>{{ requestedDays === null ? '—' : requestedDays }}</strong><span>Including start and end dates</span></p>
     <button type="submit" [disabled]="submitting || employeesLoading || loading || !!employeesError || !employees.length">{{ submitting ? 'Submitting...' : 'Submit request' }}</button>
+    </div>
   </fieldset>
   <p *ngIf="submitError" class="error" role="alert">{{ submitError }}</p>
   <p *ngIf="submitSuccess" class="success" role="status">{{ submitSuccess }}</p>
@@ -47,6 +51,8 @@
 
 <div *ngIf="loading">Loading...</div>
 
+<div class="list-header"><h3>All requests</h3><span class="count">{{ requests.length }}</span></div>
+<div class="table-wrap">
 <table *ngIf="!loading">
   <thead>
     <tr>
@@ -68,10 +74,11 @@
       <td>{{ r.startDate | date: 'dd/MM/yyyy' }}</td>
       <td>{{ r.endDate | date: 'dd/MM/yyyy' }}</td>
       <td>{{ r.days }}</td>
-      <td>{{ statusLabel(r.status) }}</td>
+      <td><span class="status" [class.pending]="r.status == 0" [class.approved]="r.status == 1" [class.rejected]="r.status == 2">{{ statusLabel(r.status) }}</span></td>
       <td>
         <button *ngIf="r.status == 0" (click)="approve(r.id)">Approve</button>
       </td>
     </tr>
   </tbody>
 </table>
+</div>
