@@ -1,5 +1,13 @@
 # הכנת סביבת המקור — 2026-09-09
 
+## עדכון לאחר האתחול השני — 2026-09-09
+- Windows אותחל ב-11:47; `HypervisorPresent=True`. החסם של הפעלת hypervisor נפתר.
+- Docker עדיין לא עלה. נמצאו קובצי socket תקועים. תיקיות התקשורת `AppData/Local/Docker/run` ו-`AppData/Local/docker-secrets-engine` נשמרו בשמות גיבוי עם הסיומות `backup-20260909` / `backup-20260909b` ללא מחיקת נתוני משתמש. בניסיון שבו שתי התיקיות הוחלפו יחד, Docker התקדם לבדיקת תנאי WSL.
+- בדיקה חדשה בהרשאת מנהל אישרה `VirtualMachinePlatform=Enabled`, אך שירותי `vmcompute` ו-`hns` אינם קיימים. אין להסיק שהרכיב תפעולי ממצב Enabled בלבד.
+- הופעל `DISM /Online /Enable-Feature /FeatureName:VirtualMachinePlatform /All /NoRestart`. התקבל `The operation completed successfully`, קוד 3010: ההשלמה דורשת הפעלה מחדש. ראיה: `.local-run/vmp-complete.txt`.
+- נדרש אתחול נוסף בידי המשתמשת. לאחריו יש לבדוק את השירותים ואת Docker; לא מובטח שהאתחול לבדו יפתור את החסם. אם השירותים עדיין חסרים, יש לאבחן את התקנת Windows לפני ניסיונות חוזרים נוספים.
+- Angular הופעל מחדש בפורט 4200. PostgreSQL/API ובדיקת השרת לא הורצו; קוד המטלה לא שונה.
+
 ## עדכון לאחר האתחול הראשון — 2026-09-09
 - אומת אתחול Windows ב-11:42. Docker לא הצליח להפעיל מנוע Linux; `HypervisorPresent=False` בעוד `VirtualizationFirmwareEnabled=True`.
 - בדיקה בהרשאת מנהל: `VirtualMachinePlatform=Enabled`, אך `Microsoft-Windows-Subsystem-Linux=Disabled`. בהגדרות האתחול לא הופיע ערך מפורש של `hypervisorlaunchtype`.
